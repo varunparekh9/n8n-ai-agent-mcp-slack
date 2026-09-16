@@ -1,0 +1,97 @@
+{
+  "name": "MCP practice",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "cb31cefc-b56d-42da-8dc1-458670212820"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2.1,
+      "position": [
+        -80,
+        -16
+      ],
+      "id": "ae84850f-be18-4de4-b3e4-13afc557f00a",
+      "name": "MCP Server Trigger",
+      "webhookId": "cb31cefc-b56d-42da-8dc1-458670212820"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "4A9vYOjBWthwNOIb",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/4A9vYOjBWthwNOIb",
+          "cachedResultName": "first n8n project ever  — sub workflow practice"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "column_query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('column_query', ``, 'string') }}",
+            "column_value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('column_value', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "column_query",
+              "displayName": "column_query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "column_value",
+              "displayName": "column_value",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        16,
+        192
+      ],
+      "id": "364ae591-d003-44bf-a8a7-b76ff3e97d22",
+      "name": "Call 'sub workflow practice'"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Call 'sub workflow practice'": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c9184dc9-73d5-4ed2-8130-f54da680928b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "61c0ce331ac7d3a4715e41c8ff38c65803c350fc59e125dbe88047d1cf56a82b"
+  },
+  "nodeGroups": [],
+  "id": "DE29fR950tSJLIIu",
+  "tags": []
+}

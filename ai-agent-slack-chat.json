@@ -1,0 +1,248 @@
+{
+  "name": "practice row look up",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -176,
+        -48
+      ],
+      "id": "2558f488-27e7-4916-bffe-ab88dfc770b6",
+      "name": "When chat message received",
+      "webhookId": "8ecd6dce-2cab-403a-8831-de26317ec7e4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{\n  (\n    $json.chatInput\n    ?? $json.text\n    ?? ''\n  )\n  .replace(/<@[^>]+>\\s*/g, '')\n  .trim()\n}}",
+        "options": {
+          "systemMessage": "You are a helpful assistant\n\n## column headings\n-ID\t\n-Full Name\t\n-First Name\t\n-Last Name\t\n-Phone\t\n-Email\t\n-Events\t\n-Manager\t\n-Active\n\nunderstand the difference between lowercase and uppercase letters\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        48,
+        -48
+      ],
+      "id": "e46f3f5e-1dbc-4784-ab07-5ca570a20077",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.6-luna",
+          "mode": "list",
+          "cachedResultName": "gpt-5.6-luna"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -112,
+        128
+      ],
+      "id": "637bf823-32f6-4499-8371-89cc58b7b01b",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0i0L4LjKRTiitOIr",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://varunparekh9.app.n8n.cloud/mcp/cb31cefc-b56d-42da-8dc1-458670212820",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.4,
+      "position": [
+        96,
+        128
+      ],
+      "id": "0dfbf059-875b-43a3-9760-bb8dac89d903",
+      "name": "MCP Client"
+    },
+    {
+      "parameters": {
+        "trigger": [
+          "app_mention"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0C24FXE4UQ",
+          "mode": "list",
+          "cachedResultName": "all-new-workspace"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        -176
+      ],
+      "id": "3d6ebd81-084d-481c-9222-97ac82a2c39a",
+      "name": "Slack Trigger",
+      "webhookId": "6db5c70e-8d70-46b0-b622-3352f916ee11",
+      "credentials": {
+        "slackApi": {
+          "id": "sBAJDK9HGnYjNzPJ",
+          "name": "Slack account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "={{ $('Slack Trigger').first().json.channel }}",
+          "mode": "id"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.7,
+      "position": [
+        416,
+        -48
+      ],
+      "id": "62c7a9e8-a4a5-4850-9eb4-563647a9aeda",
+      "name": "Send a message",
+      "webhookId": "4bf248ae-3047-4f5f-970e-1f82a2174188",
+      "credentials": {
+        "slackApi": {
+          "id": "sBAJDK9HGnYjNzPJ",
+          "name": "Slack account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "b8c7826d-0521-4048-8937-6509fab77a8d",
+              "leftValue": "={{ $('Slack Trigger').isExecuted }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        272,
+        -48
+      ],
+      "id": "5ae5e506-a44b-4aa2-a09d-3743c753e600",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d134fb59-b069-4597-b280-31227e13342e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "61c0ce331ac7d3a4715e41c8ff38c65803c350fc59e125dbe88047d1cf56a82b"
+  },
+  "nodeGroups": [],
+  "id": "PFFb7TXq8w7BCCNM",
+  "tags": []
+}
